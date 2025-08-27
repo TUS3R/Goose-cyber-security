@@ -1,0 +1,220 @@
+* {
+    box-sizing: border-box;
+  }
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+  }
+  body {
+    font-family:
+      "Inter",
+      system-ui,
+      -apple-system,
+      Segoe UI,
+      Roboto,
+      Arial;
+    background: #0b1221;
+    color: #e6ecff;
+  }
+  .wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 14px;
+  }
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .brand {
+    font-weight: 800;
+    letter-spacing: 0.2px;
+  }
+  .hud {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .hud button {
+    background: #141c33;
+    border: 1px solid #2a3a69;
+    color: #e6ecff;
+    border-radius: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+  }
+  .hud button:hover {
+    background: #1a2442;
+  }
+  .pill {
+    background: #121a33;
+    border: 1px solid #2a3a69;
+    border-radius: 999px;
+    padding: 4px 10px;
+  }
+  main {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 16px;
+  }
+  canvas {
+    width: 100%;
+    height: auto;
+    background: linear-gradient(180deg, #0e1731, #0a1122);
+    border: 1px solid #26345f;
+    border-radius: 12px;
+  }
+  .legend {
+    background: #0f1a34;
+    border: 1px solid #26345f;
+    border-radius: 12px;
+    padding: 12px;
+  }
+  .legend h3 {
+    margin: 0.6em 0 0.2em;
+  }
+  .legend ul {
+    margin: 0.3em 0 0.3em 1.2em;
+  }
+  .examples li {
+    margin: 0.2em 0;
+  }
+  .safe {
+    color: #65f0a5;
+  }
+  .phish {
+    color: #ff7171;
+  }
+  footer {
+    margin-top: 10px;
+    opacity: 0.7;
+  }
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(4, 8, 20, 0.66);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+
+
+  .threat-usb { background-image: url('assets/usb-icon.png'); }
+  .threat-ddos { background-image: url('assets/ddos-icon.png'); }
+  .threat-phishing { background-image: url('assets/phishing-icon.png'); }
+
+
+  .overlay .panel {
+    background: #0f1a34;
+    border: 1px solid #26345f;
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 420px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  }
+  .overlay .panel button {
+    background: #65f0a5;
+    color: #0a1122;
+    border: 0;
+    padding: 10px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+  }
+  .overlay .panel button:hover {
+    filter: brightness(1.05);
+  }
+  .overlay.hidden {
+    display: none;
+  }
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 20px;
+    transform: translateX(-50%);
+    background: #0f1a34;
+    border: 1px solid #26345f;
+    color: #e6ecff;
+    padding: 10px 14px;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    max-width: 90vw;
+    opacity: 0.98;
+  }
+  .toast.hidden {
+    display: none;
+  }
+
+.threat-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 8px 0;
+}
+
+.threat-icon {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.icon {
+    width: 30px;
+    height: 30px;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+.instruction-item {
+    background: rgba(255,255,255,0.1);
+    padding: 12px;
+    border-radius: 8px;
+    margin: 12px 0;
+}
+
+
+
+#mobileControls {
+  position: fixed;
+  z-index: 1000;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  display: none;
+  justify-content: space-between;
+  padding: 0 15px;
+  gap: 10px;
+  touch-action: none;
+}
+
+.mobileBtn {
+  width: 60px;
+  height: 60px;
+  border-radius: 15px;
+  font-size: 24px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid white;
+  color: white;
+  opacity: 0.9;
+  transition: all 0.1s;
+}
+
+.mobileBtn:active {
+  transform: scale(0.9);
+  opacity: 1;
+  background: rgba(255,255,255,0.4);
+}
+
+@media (max-width: 768px) {
+  #mobileControls {
+    display: flex;
+  }
+}

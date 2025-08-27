@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <!-- <meta name="viewport" content="width=device-width,initial-scale=1" /> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phish Goose</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/new_style.css" />
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="topbar">
+        <div  class="brand"> <img src="/assets/gosha_rembo.png" class="icon" > Gosha CyberSec  </div>
+        <div class="hud">
+          <span class="pill">Очки: <b id="score">0</b></span>
+          <span class="pill">Жизни: <span id="lives">❤️❤️❤️</span></span>
+          <span class="pill">Точность: <b id="acc">100%</b></span>
+          <span class="pill" id="shieldPill">Щиты: <b id="shield">0</b></span>
+          <button id="btnPause" title="Пауза">⏸</button>
+          <button id="btnRestart" title="Сначала">↻</button>
+        </div>
+      </header>
+
+      <main>
+        <canvas
+          id="game"
+          width="720"
+          height="600"
+          aria-label="Игровое поле"
+        ></canvas>
+      </main>
+
+      <div
+        id="toast"
+        class="toast hidden"
+        role="status"
+        aria-live="polite"
+      ></div>
+
+      <div id="overlay" class="overlay">
+        <div class="panel">
+          <h2>Gosha CyberSec</h2>
+              <p>Собирай заказы <img src="/assets/box.png" class="icon"> —  Набери 1000 очков и получи приз.</p>
+              <h3>Избегай:</h3>
+              <p>Флешку с вирусом</p>
+              <img src="/assets/usb.png" class="threat-icon">
+              <p>DDoS-атаку</p>
+              <img src="/assets/ddos.png" class="threat-icon">
+              <p>Фишинговое письмо</p>
+              <img src="/assets/phish.png" class="threat-icon">
+              <p> </p>
+          <button id="btnStart">Старт</button>
+          
+        </div>
+      </div>
+
+      
+
+      <div
+        id="learnOverlay"
+        class="overlay hidden"
+        role="dialog"
+        aria-modal="true"
+      >
+        <div class="panel">
+          <h3 id="learnTitle">Почему это ошибка?</h3>
+          <p id="learnText"></p>
+          <button id="learnOk">Понятно</button>
+        </div>
+      </div>
+    </div>
+
+
+    <script type="module" src="/new_app.js"></script>
+  </body>
+</html>
