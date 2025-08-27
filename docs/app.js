@@ -4,8 +4,6 @@ const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
 
-
-
 // Player
 const player = {
   x: canvas.width / 2 - 60,
@@ -234,7 +232,6 @@ if (isMobile) {
 
 
 
-
 function adaptUI() {
   const isMobile = /Android|webOS|iPhone|iPad/i.test(navigator.userAgent);
   
@@ -267,7 +264,7 @@ function mobileRender() {
 
 // --- Goose sprite (optional SVG) ---
 const gooseImg = new Image();
-gooseImg.src = "./assets/goose.svg"; 
+gooseImg.src = "assets/goose.svg"; 
 let gooseReady = false;
 gooseImg.onload = () => {
   gooseReady = true;
@@ -287,11 +284,11 @@ const images = {
   ddosImg: new Image(),
   shieldImg: new Image(), 
 }
-images.boxImg.src = "/assets/box.png";
-images.usbImg.src = "/assets/usb.png";
-images.phishImg.src = "/assets/phish.png";
-images.ddosImg.src = "/assets/ddos.png";
-images.shieldImg.src = "/assets/shield.png";
+images.boxImg.src = "assets/box.png";
+images.usbImg.src = "assets/usb.png";
+images.phishImg.src = "assets/phish.png";
+images.ddosImg.src = "assets/ddos.png";
+images.shieldImg.src = "assets/shield.png";
 
 
 
