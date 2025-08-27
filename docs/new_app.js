@@ -417,7 +417,6 @@ function restart() {
   STATE.running = true;
   STATE.paused = false;
   UI.overlay.classList.add("hidden");
-  // start()
   loop();
 }
 
