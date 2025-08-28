@@ -10,7 +10,7 @@ const player = {
   w: 135,
   h: 140,
   vx: 0,
-  speed: 5,
+  speed: 10,
   hitbox:{
     x: 33,
     y: 10,
@@ -63,7 +63,7 @@ const STATE = {
 
 
 
-// const MOBILE_BUTTONS = { left: false, right: false };
+// const MOBILE
 
 
 // const mobileBtnPress = (e) => {
@@ -96,7 +96,9 @@ const STATE = {
 // document.getElementById('btnLeft').addEventListener('touchend', () => MOBILE_BUTTONS.left = false,mobileBtnPress);
 // document.getElementById('btnLeft').addEventListener('touchcancel', mobileBtnRelease);
 // document.getElementById('btnRight').addEventListener('touchstart', () => MOBILE_BUTTONS.right = true);
-// document.getElementById('btnRight').addEventListener('touchend', () => MOBILE_BUTTONS.right = false);
+// document.getElementById('btnRight').addEventListener('touchend', () => MOBILE_BUTTONS.right = false)
+
+
 
 
 const bindHold = (btn, key) => {
