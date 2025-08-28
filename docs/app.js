@@ -10,7 +10,7 @@ const player = {
   w: 135,
   h: 140,
   vx: 0,
-  speed: 10,
+  speed: 12,
   hitbox:{
     x: 33,
     y: 10,
@@ -60,43 +60,6 @@ const STATE = {
   tutSchedule: [],
   animationId: null,
 };
-
-
-
-// const MOBILE
-
-
-// const mobileBtnPress = (e) => {
-//   e.preventDefault();
-//   e.stopPropagation();
-  
-//   if (e.currentTarget.id === 'btnLeft') {
-//     MOBILE_BUTTONS.left = true;
-//     e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.3)';
-//   } else {
-//     MOBILE_BUTTONS.right = true;
-//     e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.3)';
-//   }
-// };
-
-// const mobileBtnRelease = (e) => {
-//   e.preventDefault();
-//   e.stopPropagation();
-  
-//   if (e.currentTarget.id === 'btnLeft') {
-//     MOBILE_BUTTONS.left = false;
-//   } else {
-//     MOBILE_BUTTONS.right = false;
-//   }
-//   e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.2)';
-// };
-
-
-// document.getElementById('btnLeft').addEventListener('touchstart', () => MOBILE_BUTTONS.left = true, mobileBtnPress);
-// document.getElementById('btnLeft').addEventListener('touchend', () => MOBILE_BUTTONS.left = false,mobileBtnPress);
-// document.getElementById('btnLeft').addEventListener('touchcancel', mobileBtnRelease);
-// document.getElementById('btnRight').addEventListener('touchstart', () => MOBILE_BUTTONS.right = true);
-// document.getElementById('btnRight').addEventListener('touchend', () => MOBILE_BUTTONS.right = false)
 
 
 
