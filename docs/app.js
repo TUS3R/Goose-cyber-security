@@ -1,8 +1,7 @@
-// Phish Goose — полный скрипт (спрайт гуся, анимация, звук, щит, точность, обучение, тренировка)
-
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
-
+const W = canvas.width;
+const H = canvas.height;
 
 // Player
 const player = {
@@ -22,43 +21,7 @@ const player = {
 
 
 
-function resizeCanvas() {
-  const maxWidth = Math.min(window.innerWidth, 720);
-  const maxHeight = Math.min(window.innerHeight, 600);
-  
-  canvas.width = maxWidth;
-  canvas.height = maxHeight;
-  
-  // Обновляем позицию игрока
-  player.y = canvas.height - 150;
-  player.x = canvas.width / 2 - player.w / 2;
 
-  
-  const isMobile = window.matchMedia("(max-width: 768px), (hover: none)").matches;
-    
-    if(isMobile) {
-        canvas.width = window.innerWidth * 0.95;
-        canvas.height = window.innerHeight * 0.7;
-        player.w = 80;
-        player.h = 85;
-        player.speed = 3.5;
-    } else {
-        canvas.width = 920;
-        canvas.height = 600;
-        player.w = 135;
-        player.h = 140;
-        player.speed = 5;
-    }
-
-    player.x = canvas.width/2 - player.w/2;
-    player.y = canvas.height - player.h - 20;
-
-  
-}
-
-
-window.addEventListener('resize', resizeCanvas);
-resizeCanvas();
 
 const UI = {
   score: document.getElementById("score"),
@@ -98,28 +61,16 @@ const STATE = {
 
 
 
-const MOBILE_BUTTONS = {
-  left: false,
-  right: false
-};
+const MOBILE_BUTTONS = { left: false, right: false };
 
-// Инициализация управления
-function initMobileControls() {
-  const btnLeft = document.getElementById('btnLeft');
-  const btnRight = document.getElementById('btnRight');
-  
-  if (!btnLeft || !btnRight) return;
+document.getElementById('btnLeft').addEventListener('touchstart', () => MOBILE_BUTTONS.left = true);
+document.getElementById('btnLeft').addEventListener('touchend', () => MOBILE_BUTTONS.left = false);
+document.getElementById('btnRight').addEventListener('touchstart', () => MOBILE_BUTTONS.right = true);
+document.getElementById('btnRight').addEventListener('touchend', () => MOBILE_BUTTONS.right = false);
 
-  // Обработчики для левой кнопки
-  btnLeft.addEventListener('touchstart', () => MOBILE_BUTTONS.left = true);
-  btnLeft.addEventListener('touchend', () => MOBILE_BUTTONS.left = false);
-  btnLeft.addEventListener('touchcancel', () => MOBILE_BUTTONS.left = false);
 
-  // Обработчики для правой кнопки
-  btnRight.addEventListener('touchstart', () => MOBILE_BUTTONS.right = true);
-  btnRight.addEventListener('touchend', () => MOBILE_BUTTONS.right = false);
-  btnRight.addEventListener('touchcancel', () => MOBILE_BUTTONS.right = false);
-}
+
+
 
 
 document.querySelectorAll('.mobileBtn').forEach(btn => {
@@ -222,44 +173,13 @@ function updateAccuracy() {
   UI.acc.textContent = acc + "%";
 }
 
-// В начале игры
-const isMobile = /Android|webOS|iPhone|iPad/i.test(navigator.userAgent);
-if (isMobile) {
-  STATE.speed *= 0.8;
-  STATE.spawnEvery *= 1.2;
-}
 
-
-
-
-function adaptUI() {
-  const isMobile = /Android|webOS|iPhone|iPad/i.test(navigator.userAgent);
-  
-  if (isMobile) {
-    UI.score.style.fontSize = '24px';
-    UI.lives.style.fontSize = '32px';
-    UI.acc.style.fontSize = '20px';
-    canvas.style.touchAction = 'none';
-  }
-}
-adaptUI();
 
 document.addEventListener('touchstart', (e) => {
   if (e.target === canvas && document.fullscreenElement === null) {
     canvas.requestFullscreen();
   }
 });
-
-
-
-function mobileRender() {
-  if (isMobile) {
-    ctx.imageSmoothingEnabled = false;
-    ctx.webkitImageSmoothingEnabled = false;
-  }
-}
-
-
 
 
 // --- Goose sprite (optional SVG) ---
@@ -386,13 +306,14 @@ function start() {
   STATE.paused = false;
   updateAccuracy();
   loop();
-  initMobileControls();
+  
 }
 function togglePause() {
   if (!STATE.running) return;
   STATE.paused = !STATE.paused;
   UI.btnPause.textContent = STATE.paused ? "▶" : "⏸";
 }
+
 function restart() {
   if (STATE.animationId) {
     cancelAnimationFrame(STATE.animationId);
@@ -407,14 +328,16 @@ function restart() {
   STATE.correct = 0;
   STATE.mistakes = 0;
   STATE.shield = 0;
+ 
   UI.score.textContent = "0";
   UI.lives.textContent = "❤️❤️❤️";
   UI.shield.textContent = "0";
+  UI.overlay.classList.add("hidden");
   updateAccuracy();
   STATE.running = true;
   STATE.paused = false;
-  UI.overlay.classList.add("hidden");
   loop();
+  
 }
 
 
@@ -536,6 +459,10 @@ function drawBackground() {
   ctx.stroke();
 }
 
+
+
+
+
 function update() {
   if (STATE.paused) return;
   ANIM.t += 1;
@@ -550,38 +477,11 @@ function update() {
 
   player.vx = 0;
 
-  let touchStartX = 0;
-  let joystickActive = false;
-
- 
-
-  document.addEventListener('touchmove', (e) => {
-    if (!joystickActive) return;
-    e.preventDefault();
-    
-    const deltaX = e.touches[0].clientX - touchStartX;
-    player.vx = (deltaX / 40) * player.speed; // Чувствительность
-  });
-
-  document.addEventListener('touchend', () => {
-    joystickActive = false;
-    player.vx = 0;
-  });
-
-
-
+  if (STATE.paused || !STATE.running) return; 
   if (MOBILE_BUTTONS.left) player.vx = -player.speed;
   if (MOBILE_BUTTONS.right) player.vx = player.speed;
 
-  const moving =
-    Math.abs(player.vx) > 0.1 ||
-    keys["ArrowLeft"] ||
-    keys["ArrowRight"] ||
-    keys["a"] ||
-    keys["A"] ||
-    keys["d"] ||
-    keys["D"];
-  ANIM.wing += ((moving ? 1 : 0) - ANIM.wing) * 0.12;
+  
 
   player.x += player.vx;
   player.x = Math.max(4, Math.min(canvas.width - player.w - 4, player.x));
@@ -598,14 +498,14 @@ function update() {
     if (collide({ x: player.x, y: player.y, w: player.w, h: player.h }, it)) {
       if (it.type === "safe") {
         quack();
-        STATE.score += 10;
+        STATE.score += 20;
         STATE.correct++;
         items.splice(i, 1);
       } else if (it.type === "buff") {
         items.splice(i,1);
         shieldUp();
         STATE.shield = Math.min(3, STATE.shield + 1);
-        STATE.score += 15;
+        STATE.score += 10;
 
         UI.shield.textContent = String(STATE.shield);
       } else if (it.type.startsWith("threat")) {
@@ -659,7 +559,7 @@ function update() {
 
 function drawAllHitboxes() {
   ctx.save();
-  // ctx.setTransform(1, 0, 0, 1, 0, 0); // Сброс всех трансформаций
+
   ctx.globalCompositeOperation = 'screen'; // Чтобы хитбоксы были поверх всего
   
   // Стили для хитбоксов
@@ -732,10 +632,6 @@ function drawDebugHitboxes() {
 
 
 
-
-
-
-
 function render() {
   
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -773,8 +669,8 @@ function render() {
     ctx.translate(drawX, drawY + 16);
     ctx.rotate(angle);
 
-    const shieldOffsetY = 70; // Экспериментируйте с этим значением
-    const shieldY = -player.h * 0.5 + shieldOffsetY; // Смещение от центра
+    const shieldOffsetY = 70; 
+    const shieldY = -player.h * 0.5 + shieldOffsetY;
     ctx.drawImage(
         shieldImg,
         -player.w * -0.3, 
@@ -800,7 +696,7 @@ function render() {
     drawAllHitboxes();
   }
   
-  mobileRender();
+  
   
 }
 
