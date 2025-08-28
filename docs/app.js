@@ -52,7 +52,7 @@ const STATE = {
   lives: 3,
   tick: 0,
   spawnEvery: 60,
-  speed: 2.4,
+  speed: 3.2,
   correct: 0,
   mistakes: 0,
   shield: 0,
@@ -260,6 +260,7 @@ const CATALOG = [
     image: images.shieldImg,
     width: 80,
     height: 80,
+    weight: 2,
     hitbox: { x: 0, y: 0, w: 80, h: 80 }
   },
   {
@@ -267,6 +268,7 @@ const CATALOG = [
     image: images.boxImg,
     width: 80,
     height: 80,
+    weight: 5,
     hitbox: { x: 10, y: 10, w: 60, h: 60 }
   },
   { 
@@ -275,6 +277,7 @@ const CATALOG = [
     width: 80,
     height: 80,
     hitbox: { x: 10, y: 10, w: 60, h: 60 },
+    weight: 6,
     title: "USB-угроза",
     description: "Подозрительная флешка! Это может быть вредоносное устройство."
   },
@@ -284,6 +287,7 @@ const CATALOG = [
     width: 80,
     height: 80,
     hitbox: { x: 10, y: 10, w: 60, h: 60 },
+    weight: 6,
     title: "Фишинг",
     description: "Это письмо пытается украсть твои данные!"
   },
@@ -294,6 +298,7 @@ const CATALOG = [
     width: 80,
     height: 80,
     hitbox: { x: 10, y: 10, w: 60, h: 60 },
+    weight: 4,
     title: "DDoS-атака",
     description: "Обнаружена попытка перегрузки сети!"
   },
@@ -376,18 +381,31 @@ function restart() {
 
 
 function spawn() {
+  const totalWeight = CATALOG.reduce((sum, item) => sum + item.weight, 0);
+  let random = Math.random() * totalWeight;
+
+
+  let selected;
+  for (const item of CATALOG) {
+    random -= item.weight;
+    if (random <= 0) {
+      selected = item;
+      break;
+    }
+  }
+
   const data = CATALOG[Math.floor(Math.random() * CATALOG.length)];
   const width = data.image ? data.width : 56 + Math.min(260, data.text.length * 6);
   
   
-  
   items.push({
-    ...data,
+    // ...data,
+    ...selected,
     x: Math.random() * (canvas.width - width - 20) + 10,
     y: -40,
     w: width,
     h: data.image ? data.height : 34,
-    vy: STATE.speed + Math.random() * 2.2,
+    vy: STATE.speed + Math.random() * 1.5,
   });
   
 }
