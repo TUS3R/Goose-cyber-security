@@ -38,6 +38,8 @@ const UI = {
   learnText: document.getElementById("learnText"),
   learnOk: document.getElementById("learnOk"),
   toast: document.getElementById("toast"),
+  btnLeft: document.getElementById('btnLeft'),
+  btnRight: document.getElementById('btnRight'),
 };
 
 const STATE = {
@@ -61,15 +63,79 @@ const STATE = {
 
 
 
-const MOBILE_BUTTONS = { left: false, right: false };
-
-document.getElementById('btnLeft').addEventListener('touchstart', () => MOBILE_BUTTONS.left = true);
-document.getElementById('btnLeft').addEventListener('touchend', () => MOBILE_BUTTONS.left = false);
-document.getElementById('btnRight').addEventListener('touchstart', () => MOBILE_BUTTONS.right = true);
-document.getElementById('btnRight').addEventListener('touchend', () => MOBILE_BUTTONS.right = false);
+// const MOBILE_BUTTONS = { left: false, right: false };
 
 
+// const mobileBtnPress = (e) => {
+//   e.preventDefault();
+//   e.stopPropagation();
+  
+//   if (e.currentTarget.id === 'btnLeft') {
+//     MOBILE_BUTTONS.left = true;
+//     e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.3)';
+//   } else {
+//     MOBILE_BUTTONS.right = true;
+//     e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.3)';
+//   }
+// };
 
+// const mobileBtnRelease = (e) => {
+//   e.preventDefault();
+//   e.stopPropagation();
+  
+//   if (e.currentTarget.id === 'btnLeft') {
+//     MOBILE_BUTTONS.left = false;
+//   } else {
+//     MOBILE_BUTTONS.right = false;
+//   }
+//   e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.2)';
+// };
+
+
+// document.getElementById('btnLeft').addEventListener('touchstart', () => MOBILE_BUTTONS.left = true, mobileBtnPress);
+// document.getElementById('btnLeft').addEventListener('touchend', () => MOBILE_BUTTONS.left = false,mobileBtnPress);
+// document.getElementById('btnLeft').addEventListener('touchcancel', mobileBtnRelease);
+// document.getElementById('btnRight').addEventListener('touchstart', () => MOBILE_BUTTONS.right = true);
+// document.getElementById('btnRight').addEventListener('touchend', () => MOBILE_BUTTONS.right = false);
+
+
+const bindHold = (btn, key) => {
+  const on = e => { 
+    e.preventDefault(); 
+    keys[key] = true;
+    btn.style.backgroundColor = 'rgba(255,255,255,0.3)';
+  };
+  const off = e => { 
+    e.preventDefault(); 
+    keys[key] = false;
+    btn.style.backgroundColor = 'rgba(255,255,255,0.2)';
+  };
+  btn.addEventListener('touchstart', on);
+  btn.addEventListener('touchend', off);
+  btn.addEventListener('mousedown', on);
+  btn.addEventListener('mouseup', off);
+  btn.addEventListener('mouseleave', off);
+};
+
+// Инициализация кнопок
+if (UI.btnLeft && UI.btnRight && UI.btnPause) {
+  bindHold(UI.btnLeft, 'left');
+  bindHold(UI.btnRight, 'right');
+  UI.btnPause.addEventListener('click', togglePause);
+}
+
+// Обновите обработчики клавиатуры
+window.addEventListener("keydown", (e) => {
+  if (e.key === "ArrowLeft" || e.key === "a") keys.left = true;
+  if (e.key === "ArrowRight" || e.key === "d") keys.right = true;
+  // ... остальные клавиши
+});
+
+window.addEventListener("keyup", (e) => {
+  if (e.key === "ArrowLeft" || e.key === "a") keys.left = false;
+  if (e.key === "ArrowRight" || e.key === "d") keys.right = false;
+  // ... остальные клавиши
+});
 
 
 
@@ -477,11 +543,12 @@ function update() {
 
   player.vx = 0;
 
-  if (STATE.paused || !STATE.running) return; 
-  if (MOBILE_BUTTONS.left) player.vx = -player.speed;
-  if (MOBILE_BUTTONS.right) player.vx = player.speed;
+  // if (STATE.paused || !STATE.running) return; 
+  // if (MOBILE_BUTTONS.left) player.vx = -player.speed;
+  // if (MOBILE_BUTTONS.right) player.vx = player.speed;
 
-  
+  if (keys.left) player.vx = -player.speed;
+  if (keys.right) player.vx = player.speed;
 
   player.x += player.vx;
   player.x = Math.max(4, Math.min(canvas.width - player.w - 4, player.x));
