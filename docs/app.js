@@ -3,6 +3,8 @@ const ctx = canvas.getContext("2d");
 const W = canvas.width;
 const H = canvas.height;
 
+
+const isMobile =/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 // Player
 const player = {
   x: canvas.width / 2 - 60,
@@ -10,7 +12,8 @@ const player = {
   w: 135,
   h: 140,
   vx: 0,
-  speed: 12,
+  // speed: 12,
+  speed: isMobile ? 8 : 6,
   hitbox:{
     x: 33,
     y: 10,
