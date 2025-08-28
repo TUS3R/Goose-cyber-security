@@ -217,6 +217,15 @@
   font-size: 24px;
   cursor: pointer;
   transition: all 0.2s;
+  -webkit-touch-callout: none;  /* Отключает меню вызова на iOS */
+  -webkit-user-select: none;    /* Отключает выделение текста WebKit */
+  -moz-user-select: none;       /* Отключает выделение текста Firefox */
+  -ms-user-select: none;        /* Отключает выделение текста IE/Edge */
+  user-select: none;            /* Стандартное свойство */
+  touch-action: manipulation;   /* Оптимизирует обработку касаний */
+}
+
+
 }
 
 .mobileBtn:active {
