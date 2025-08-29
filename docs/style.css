@@ -164,6 +164,17 @@
     background-position: center;
 }
 
+.safe-icon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+
+
 .icon {
     width: 30px;
     height: 30px;

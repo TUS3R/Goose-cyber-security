@@ -12,8 +12,7 @@ const player = {
   w: 135,
   h: 140,
   vx: 0,
-  // speed: 12,
-  speed: isMobile ? 8 : 6,
+  speed: 7,
   hitbox:{
     x: 33,
     y: 10,
@@ -21,9 +20,6 @@ const player = {
     h: 250
   }
 };
-
-
-
 
 
 const UI = {
@@ -35,7 +31,9 @@ const UI = {
   btnPause: document.getElementById("btnPause"),
   btnRestart: document.getElementById("btnRestart"),
   btnTrain: document.getElementById("btnTrain"),
-  overlay: document.getElementById("overlay"),
+  btnNext: document.getElementById("btnNext"),
+  startScreen: document.getElementById("startScreen"),
+  tutorialScreen: document.getElementById("tutorialScreen"),
   learnOverlay: document.getElementById("learnOverlay"),
   learnTitle: document.getElementById("learnTitle"),
   learnText: document.getElementById("learnText"),
@@ -52,7 +50,7 @@ const STATE = {
   lives: 3,
   tick: 0,
   spawnEvery: 60,
-  speed: 3.2,
+  speed: 4,
   correct: 0,
   mistakes: 0,
   shield: 0,
@@ -216,6 +214,25 @@ document.addEventListener('touchstart', (e) => {
 });
 
 
+document.addEventListener('DOMContentLoaded', () => {
+  UI.startScreen.classList.remove('hidden');
+});
+
+// Переход ко второму экрану
+UI.btnNext.addEventListener('click', () => {
+  UI.startScreen.classList.add('hidden');
+  UI.tutorialScreen.classList.remove('hidden');
+});
+
+UI.btnStart.addEventListener('click', () => {
+  UI.tutorialScreen.classList.add('hidden');
+  ensureAudio();
+  STATE.running = true;
+  STATE.paused = false;
+  loop();
+});
+
+
 // --- Goose sprite (optional SVG) ---
 const gooseImg = new Image();
 gooseImg.src = "assets/goose.svg"; 
@@ -339,7 +356,7 @@ UI.learnOk.addEventListener("click", () => {
 
 function start() {
   ensureAudio();
-  UI.overlay.classList.add("hidden");
+  UI.startScreen.classList.add("hidden");
   STATE.mode = "game";
   STATE.running = true;
   STATE.paused = false;
@@ -358,7 +375,7 @@ function restart() {
     cancelAnimationFrame(STATE.animationId);
   }
   ensureAudio();
-  STATE.speed = 3; 
+  STATE.speed = 4; 
   STATE.spawnEvery = 60; 
   STATE.score = 0;
   STATE.lives = 3;
@@ -367,16 +384,18 @@ function restart() {
   STATE.correct = 0;
   STATE.mistakes = 0;
   STATE.shield = 0;
- 
+  
+  player.speed = 7;
+
+
   UI.score.textContent = "0";
   UI.lives.textContent = "❤️❤️❤️";
   UI.shield.textContent = "0";
-  UI.overlay.classList.add("hidden");
   updateAccuracy();
   STATE.running = true;
   STATE.paused = false;
-  loop();
-  
+  UI.startScreen.classList.add("hidden");
+  loop();  
 }
 
 
@@ -405,7 +424,7 @@ function spawn() {
     y: -40,
     w: width,
     h: data.image ? data.height : 34,
-    vy: STATE.speed + Math.random() * 1.5,
+    vy: STATE.speed,
   });
   
 }
@@ -529,9 +548,7 @@ function update() {
 
   player.vx = 0;
 
-  // if (STATE.paused || !STATE.running) return; 
-  // if (MOBILE_BUTTONS.left) player.vx = -player.speed;
-  // if (MOBILE_BUTTONS.right) player.vx = player.speed;
+ 
 
   if (keys.left) player.vx = -player.speed;
   if (keys.right) player.vx = player.speed;
@@ -769,8 +786,8 @@ function gameOver() {
   cancelAnimationFrame(STATE.animationId);
   const total = STATE.correct + STATE.mistakes;
   const acc = total ? Math.round((STATE.correct / total) * 100) : 100;
-  UI.overlay.classList.remove("hidden");
-  UI.overlay.querySelector(".panel").innerHTML = `
+  UI.startScreen.classList.remove("hidden");
+  UI.startScreen.querySelector(".panel").innerHTML = `
     <h2>Игра окончена</h2>
     <p>Очки: <b>${STATE.score}</b></p>
     <p>Точность: <b>${acc}%</b></p>
