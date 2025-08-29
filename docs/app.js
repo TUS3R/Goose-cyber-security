@@ -2,7 +2,7 @@ const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 const W = canvas.width;
 const H = canvas.height;
-const BASE_GAME_SPEED = 5; // Базовая скорость предметов
+const BASE_GAME_SPEED = 7; // Базовая скорость предметов
 const BASE_PLAYER_SPEED = 13; // Базовая скорость персонажа
 
 const isMobile =/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -286,7 +286,7 @@ const CATALOG = [
     image: images.boxImg,
     width: 80,
     height: 80,
-    weight: 5,
+    weight: 6,
     hitbox: { x: 10, y: 10, w: 60, h: 60 }
   },
   { 
@@ -295,7 +295,7 @@ const CATALOG = [
     width: 80,
     height: 80,
     hitbox: { x: 10, y: 10, w: 60, h: 60 },
-    weight: 6,
+    weight: 4,
     title: "USB-угроза",
     description: "Подозрительная флешка! Это может быть вредоносное устройство."
   },
@@ -355,6 +355,34 @@ UI.learnOk.addEventListener("click", () => {
 
 
 
+
+
+function preloadImages() {
+  const images = [
+    { name: 'goose', url: 'assets/goose.svg' },
+    { name: 'shield', url: 'assets/shield.png' },
+    { name: 'box', url: 'assets/box.png' },
+    { name: 'usb', url: 'assets/usb.png' },
+    { name: 'phish', url: 'assets/phish.png' },
+    { name: 'ddos', url: 'assets/ddos.png' }
+  ];
+
+  return Promise.all(
+    images.map(img => {
+      return new Promise((resolve, reject) => {
+        const image = new Image();
+        image.src = img.url;
+        image.onload = () => resolve();
+        image.onerror = reject;
+      });
+    })
+  );
+}
+
+
+
+
+
 function start() {
   ensureAudio();
   UI.startScreen.classList.add("hidden");
@@ -365,7 +393,6 @@ function start() {
   player.speed;
   console.log("[start] Game Speed:", STATE.speed, "Player Speed:", player.speed);
   updateAccuracy();
-  // loop();
   restart()
   
 }
@@ -381,7 +408,7 @@ function restart() {
   }
   ensureAudio();
   console.log("[Restart] Game Speed:", STATE.speed, "Player Speed:", player.speed);
-  STATE.spawnEvery = 60; 
+  STATE.spawnEvery = 50; 
   STATE.score = 0;
   STATE.lives = 3;
   STATE.tick = 0;
@@ -576,14 +603,14 @@ function update() {
     if (collide({ x: player.x, y: player.y, w: player.w, h: player.h }, it)) {
       if (it.type === "safe") {
         quack();
-        STATE.score += 20;
+        STATE.score += 10;
         STATE.correct++;
         items.splice(i, 1);
       } else if (it.type === "buff") {
         items.splice(i,1);
         shieldUp();
         STATE.shield = Math.min(3, STATE.shield + 1);
-        STATE.score += 10;
+        STATE.score += 5;
 
         UI.shield.textContent = String(STATE.shield);
       } else if (it.type.startsWith("threat")) {
@@ -626,8 +653,8 @@ function update() {
   }
 
   if (STATE.tick % 600 === 0 && STATE.tick > 0) {
-  // //   STATE.spawnEvery = Math.max(26, STATE.spawnEvery - 4);
-  // //   STATE.speed += 0.25;
+    STATE.spawnEvery = Math.max(26, STATE.spawnEvery - 4);
+    STATE.speed += 0.25;
   }
 }
 
