@@ -2,7 +2,8 @@ const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 const W = canvas.width;
 const H = canvas.height;
-
+const BASE_GAME_SPEED = 5; // Базовая скорость предметов
+const BASE_PLAYER_SPEED = 13; // Базовая скорость персонажа
 
 const isMobile =/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 // Player
@@ -12,7 +13,8 @@ const player = {
   w: 135,
   h: 140,
   vx: 0,
-  speed: 7,
+  // speed: 7,
+  speed: BASE_PLAYER_SPEED,
   hitbox:{
     x: 33,
     y: 10,
@@ -50,7 +52,8 @@ const STATE = {
   lives: 3,
   tick: 0,
   spawnEvery: 60,
-  speed: 4,
+  // speed: 4,
+  speed: BASE_GAME_SPEED,
   correct: 0,
   mistakes: 0,
   shield: 0,
@@ -94,13 +97,11 @@ if (UI.btnLeft && UI.btnRight && UI.btnPause) {
 window.addEventListener("keydown", (e) => {
   if (e.key === "ArrowLeft" || e.key === "a") keys.left = true;
   if (e.key === "ArrowRight" || e.key === "d") keys.right = true;
-  // ... остальные клавиши
 });
 
 window.addEventListener("keyup", (e) => {
   if (e.key === "ArrowLeft" || e.key === "a") keys.left = false;
   if (e.key === "ArrowRight" || e.key === "d") keys.right = false;
-  // ... остальные клавиши
 });
 
 
@@ -198,6 +199,8 @@ function shieldBlock() {
   o.start();
   o.stop(AC.currentTime + 0.18);
 }
+
+
 
 function updateAccuracy() {
   const total = STATE.correct + STATE.mistakes;
@@ -358,8 +361,12 @@ function start() {
   STATE.mode = "game";
   STATE.running = true;
   STATE.paused = false;
+  STATE.speed;
+  player.speed;
+  console.log("[start] Game Speed:", STATE.speed, "Player Speed:", player.speed);
   updateAccuracy();
-  loop();
+  // loop();
+  restart()
   
 }
 function togglePause() {
@@ -373,7 +380,7 @@ function restart() {
     cancelAnimationFrame(STATE.animationId);
   }
   ensureAudio();
-  STATE.speed = 4; 
+  console.log("[Restart] Game Speed:", STATE.speed, "Player Speed:", player.speed);
   STATE.spawnEvery = 60; 
   STATE.score = 0;
   STATE.lives = 3;
@@ -383,8 +390,8 @@ function restart() {
   STATE.mistakes = 0;
   STATE.shield = 0;
   
-  player.speed = 7;
-
+  // player.speed = 7;
+  // STATE.speed = 4; 
 
   UI.score.textContent = "0";
   UI.lives.textContent = "❤️❤️❤️";
@@ -416,13 +423,14 @@ function spawn() {
   
   
   items.push({
-    // ...data,
+    
     ...selected,
     x: Math.random() * (canvas.width - width - 20) + 10,
     y: -40,
     w: width,
     h: data.image ? data.height : 34,
-    vy: STATE.speed,
+    // vy: STATE.speed,
+    vy: BASE_GAME_SPEED + Math.random() * 1.5,
   });
   
 }
@@ -534,6 +542,9 @@ function drawBackground() {
 
 function update() {
   if (STATE.paused) return;
+  console.log("[Update] Game Speed:", STATE.speed);
+  console.log("[Update player speed:", player.speed);
+  console.log("Tick:", STATE.tick, "Speed:", STATE.speed);
   ANIM.t += 1;
   ANIM.blinkT += 1;
   if (ANIM.blinkT > 240 + Math.random() * 120) {
@@ -615,8 +626,8 @@ function update() {
   }
 
   if (STATE.tick % 600 === 0 && STATE.tick > 0) {
-    STATE.spawnEvery = Math.max(26, STATE.spawnEvery - 4);
-    STATE.speed += 0.25;
+  // //   STATE.spawnEvery = Math.max(26, STATE.spawnEvery - 4);
+  // //   STATE.speed += 0.25;
   }
 }
 
@@ -773,7 +784,6 @@ function loop() {
     STATE.tick++;
     update();
     render();
-    
   }
   STATE.animationId = requestAnimationFrame(loop);
 }
@@ -790,7 +800,6 @@ function gameOver() {
     <p>Точность: <b>${acc}%</b></p>
     <button id="btnAgain">Ещё раз</button>
   `;
-  
   
   document.getElementById('btnAgain').addEventListener('click', restart, {once: true});
 }
