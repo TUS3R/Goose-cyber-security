@@ -108,11 +108,11 @@ window.addEventListener("keyup", (e) => {
 
 document.querySelectorAll('.mobileBtn').forEach(btn => {
   btn.addEventListener('touchstart', function() {
-    this.style.backgroundColor = 'rgba(255,255,255,0.3)';
+    this.style.backgroundColor = 'rgba(0,91,255,0.4)';
   });
   
   btn.addEventListener('touchend', function() {
-    this.style.backgroundColor = 'rgba(255,255,255,0.2)';
+    this.style.backgroundColor = 'rgba(0,91,255,0.7)';
   });
 });
 
@@ -210,11 +210,11 @@ function updateAccuracy() {
 
 
 
-document.addEventListener('touchstart', (e) => {
-  if (e.target === canvas && document.fullscreenElement === null) {
-    canvas.requestFullscreen();
-  }
-});
+// document.addEventListener('touchstart', (e) => {
+//   if (e.target === canvas && document.fullscreenElement === null) {
+//     canvas.requestFullscreen();
+//   }
+// });
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -637,6 +637,10 @@ function update() {
         gameOver();
         return;
       }
+      if (STATE.score === 300){
+        win();
+        return;
+      }
     } else if (it.y > canvas.height + 40) {
       if (it.type === "safe") {
         STATE.score = Math.max(0, STATE.score - 20);
@@ -830,6 +834,24 @@ function gameOver() {
   
   document.getElementById('btnAgain').addEventListener('click', restart, {once: true});
 }
+
+
+function win() {
+  STATE.running = false;
+  cancelAnimationFrame(STATE.animationId);
+  const total = STATE.correct + STATE.mistakes;
+  const acc = total ? Math.round((STATE.correct / total) * 100) : 100;
+  UI.startScreen.classList.remove("hidden");
+  UI.startScreen.querySelector(".panel").innerHTML = `
+    <h2>Победа</h2>
+    <p>Очки: <b>${STATE.score}</b></p>
+    <p>Точность: <b>${acc}%</b></p>
+    <button id="btnAgain">Ещё раз</button>
+  `;
+  
+  document.getElementById('btnAgain').addEventListener('click', restart, {once: true});
+}
+
 
 function showLearn(item, title) {
   STATE.paused = true;
