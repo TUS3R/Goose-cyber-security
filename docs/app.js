@@ -264,8 +264,6 @@ images.shieldImg.src = "assets/shield.png";
 
 
 
-
-
 // Items and animation
 const items = [];
 const ANIM = { t: 0, blinkT: 0, blinkOpen: 1, wing: 0 };
@@ -548,7 +546,6 @@ function update() {
 
   player.vx = 0;
 
- 
 
   if (keys.left) player.vx = -player.speed;
   if (keys.right) player.vx = player.speed;
