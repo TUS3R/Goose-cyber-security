@@ -32,6 +32,8 @@
   .brand {
     font-weight: 800;
     letter-spacing: 0.2px;
+    align-items: center;
+    justify-content: space-between;
   }
   .hud {
     display: flex;
@@ -197,6 +199,7 @@
   bottom: 20px;
   left: 0;
   right: 0;
+  bottom: 30px;
   display: none;
   justify-content: space-between;
   padding: 0 15px;
