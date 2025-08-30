@@ -2,7 +2,7 @@ const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 const W = canvas.width;
 const H = canvas.height;
-const BASE_GAME_SPEED = 7; // Базовая скорость предметов
+const BASE_GAME_SPEED = 10; // Базовая скорость предметов
 const BASE_PLAYER_SPEED = 13; // Базовая скорость персонажа
 
 const isMobile =/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -286,7 +286,7 @@ const CATALOG = [
     image: images.boxImg,
     width: 80,
     height: 80,
-    weight: 6,
+    weight: 5,
     hitbox: { x: 10, y: 10, w: 60, h: 60 }
   },
   { 
@@ -294,8 +294,8 @@ const CATALOG = [
     image: images.usbImg,
     width: 80,
     height: 80,
-    hitbox: { x: 10, y: 10, w: 60, h: 60 },
     weight: 4,
+    hitbox: { x: 10, y: 10, w: 60, h: 60 },
     title: "USB-угроза",
     description: "Подозрительная флешка! Это может быть вредоносное устройство."
   },
@@ -432,34 +432,66 @@ function restart() {
 
 
 function spawn() {
-  const totalWeight = CATALOG.reduce((sum, item) => sum + item.weight, 0);
-  let random = Math.random() * totalWeight;
+  // const totalWeight = CATALOG.reduce((sum, item) => sum + item.weight, 0);
+  // let random = Math.random() * totalWeight;
 
 
-  let selected;
-  for (const item of CATALOG) {
-    random -= item.weight;
-    if (random <= 0) {
-      selected = item;
-      break;
-    }
-  }
+  // let selected;
+  // for (const item of CATALOG) {
+  //   random -= item.weight;
+  //   if (random <= 0) {
+  //     selected = item;
+  //     break;
+  //   }
+  // }
 
-  const data = CATALOG[Math.floor(Math.random() * CATALOG.length)];
-  const width = data.image ? data.width : 56 + Math.min(260, data.text.length * 6);
+  // const data = CATALOG[Math.floor(Math.random() * CATALOG.length)];
+  // const width = data.image ? data.width : 56 + Math.min(260, data.text.length * 6);
   
   
-  items.push({
+  // items.push({
     
-    ...selected,
-    x: Math.random() * (canvas.width - width - 20) + 10,
-    y: -40,
-    w: width,
-    h: data.image ? data.height : 34,
-    // vy: STATE.speed,
-    vy: BASE_GAME_SPEED + Math.random() * 1.5,
-  });
+  //   ...selected,
+  //   x: Math.random() * (canvas.width - width - 20) + 10,
+  //   y: -40,
+  //   w: width,
+  //   h: data.image ? data.height : 34,
+    
+  //   vy: BASE_GAME_SPEED + Math.random() * 1.5,
+  // });
   
+  const SPAWN_COUNT = 2; // Количество предметов за один спавн
+  const totalWeight = CATALOG.reduce((sum, item) => sum + item.weight, 0);
+
+  for (let i = 0; i < SPAWN_COUNT; i++) {
+    let random = Math.random() * totalWeight;
+    const selected = CATALOG.find(item => {
+      random -= item.weight;
+      return random <= 0;
+    }) || CATALOG[0];
+
+    // Расчёт параметров
+    const width = selected.image ? selected.width : 56 + Math.min(260, (selected.text?.length || 0) * 6);
+    
+    // Позиция с проверкой пересечений
+    let x;
+    let attempts = 0;
+    do {
+      x = Math.random() * (canvas.width - width - 20) + 10;
+      attempts++;
+    } while (items.some(item => 
+      Math.abs(item.x - x) < (item.w + width) * 0.8
+    ) && attempts < 100);
+
+    items.push({
+      ...selected,
+      x: x,
+      y: -40 * (i + 1), // Смещение для каждого предмета
+      w: width,
+      h: selected.image ? selected.height : 34,
+      vy: STATE.speed + Math.random() * 1.5
+    });
+  }
 }
 
 
@@ -637,13 +669,13 @@ function update() {
         gameOver();
         return;
       }
-      if (STATE.score === 300){
+      if (STATE.score >= 300){
         win();
         return;
       }
     } else if (it.y > canvas.height + 40) {
       if (it.type === "safe") {
-        STATE.score = Math.max(0, STATE.score - 20);
+        STATE.score = Math.max(0, STATE.score - 10);
         UI.score.textContent = String(STATE.score);
         STATE.mistakes++;
         
@@ -656,7 +688,7 @@ function update() {
     }
   }
 
-  if (STATE.tick % 600 === 0 && STATE.tick > 0) {
+  if (STATE.tick % 300 === 0 && STATE.tick > 0) {
     STATE.spawnEvery = Math.max(26, STATE.spawnEvery - 4);
     STATE.speed += 0.25;
   }
@@ -804,8 +836,6 @@ function render() {
   if (window.DEBUG_MODE) {
     drawAllHitboxes();
   }
-  
-  
   
 }
 
