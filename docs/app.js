@@ -2,7 +2,7 @@ const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 const W = canvas.width;
 const H = canvas.height;
-const BASE_GAME_SPEED = 10; // Базовая скорость предметов
+const BASE_GAME_SPEED = 9; // Базовая скорость предметов
 const BASE_PLAYER_SPEED = 13; // Базовая скорость персонажа
 
 const isMobile =/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -13,7 +13,6 @@ const player = {
   w: 135,
   h: 140,
   vx: 0,
-  // speed: 7,
   speed: BASE_PLAYER_SPEED,
   hitbox:{
     x: 33,
@@ -52,7 +51,6 @@ const STATE = {
   lives: 3,
   tick: 0,
   spawnEvery: 60,
-  // speed: 4,
   speed: BASE_GAME_SPEED,
   correct: 0,
   mistakes: 0,
@@ -64,7 +62,6 @@ const STATE = {
   tutSchedule: [],
   animationId: null,
 };
-
 
 
 
@@ -417,8 +414,8 @@ function restart() {
   STATE.mistakes = 0;
   STATE.shield = 0;
   
-  // player.speed = 7;
-  // STATE.speed = 4; 
+  player.speed = BASE_PLAYER_SPEED;
+  STATE.speed = BASE_GAME_SPEED; 
 
   UI.score.textContent = "0";
   UI.lives.textContent = "❤️❤️❤️";
@@ -460,7 +457,11 @@ function spawn() {
   //   vy: BASE_GAME_SPEED + Math.random() * 1.5,
   // });
   
-  const SPAWN_COUNT = 2; // Количество предметов за один спавн
+
+  let SPAWN_COUNT = Math.floor(Math.random() *3)+1;
+
+
+  // const SPAWN_COUNT = 2; 
   const totalWeight = CATALOG.reduce((sum, item) => sum + item.weight, 0);
 
   for (let i = 0; i < SPAWN_COUNT; i++) {
@@ -691,6 +692,8 @@ function update() {
   if (STATE.tick % 300 === 0 && STATE.tick > 0) {
     STATE.spawnEvery = Math.max(26, STATE.spawnEvery - 4);
     STATE.speed += 0.25;
+    player.speed += 0.25;
+
   }
 }
 
